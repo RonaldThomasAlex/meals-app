@@ -1,8 +1,10 @@
 import { useLayoutEffect } from "react";
-import { Text, View, Image } from "react-native";
+import { Text, View, Image, StyleSheet, ScrollView } from "react-native";
 
 import { MEALS } from "../data/dummy-data";
 import MealDetails from "../components/MealDetails";
+import SubTitle from "../components/mealdetail/SubTitle";
+import List from "../components/mealdetail/List";
 
 const MealDetailScreen = ({ route, navigation }) => {
   const { mealId } = route.params;
@@ -16,30 +18,57 @@ const MealDetailScreen = ({ route, navigation }) => {
   }, [mealId, route]);
 
   return (
-    <View>
-      <Image source={{ uri: selectedMeal.imageUrl }} />
+    <ScrollView style={styles.root}>
+      <Image style={styles.image} source={{ uri: selectedMeal.imageUrl }} />
 
-      <Text>{selectedMeal.title}</Text>
+      <Text style={styles.title}>{selectedMeal.title}</Text>
 
       <MealDetails
         duration={selectedMeal.duration}
         affordability={selectedMeal.affordability}
         complexity={selectedMeal.complexity}
+        textStyle={styles.detailText}
       />
 
-      <Text>Ingredients</Text>
+      <View style={styles.listOuterContainer}>
+        <View style={styles.listContainer}>
+          <SubTitle>Ingredients</SubTitle>
 
-      {selectedMeal.ingredients.map((ingredient) => {
-        return <Text key={ingredient}>{ingredient}</Text>;
-      })}
+          <List data={selectedMeal.ingredients} />
 
-      <Text>Steps</Text>
+          <SubTitle>Steps</SubTitle>
 
-      {selectedMeal.steps.map((step) => {
-        return <Text key={step}>{step}</Text>;
-      })}
-    </View>
+          <List data={selectedMeal.steps} />
+        </View>
+      </View>
+    </ScrollView>
   );
 };
 
 export default MealDetailScreen;
+
+const styles = StyleSheet.create({
+  root: {
+    marginBottom: 32
+  },
+  image: {
+    width: "100%",
+    height: 350
+  },
+  title: {
+    fontWeight: "bold",
+    fontSize: 24,
+    margin: 8,
+    textAlign: "center",
+    color: "white"
+  },
+  detailText: {
+    color: "white"
+  },
+  listOuterContainer: {
+    alignItems: "center"
+  },
+  listContainer: {
+    width: "80%"
+  }
+});
